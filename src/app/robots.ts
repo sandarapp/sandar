@@ -1,4 +1,8 @@
 import type { MetadataRoute } from "next";
+import { siteUrl } from "@/lib/site";
+
+// Required by `output: "export"`: the route has to be prerenderable.
+export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,7 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://sandar.example/sitemap.xml",
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }
-

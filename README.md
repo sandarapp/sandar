@@ -80,23 +80,71 @@ npm run lint
 npm run build
 ```
 
-## Deploy to Vercel
+## Deploy to Cloudflare Pages
 
-1. Push this project to GitHub.
-2. Import the repository into Vercel.
-3. Add the same environment variables in Vercel:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Deploy.
+This project builds to a fully static site (`output: "export"` in
+`next.config.ts`), so it needs no Node server at runtime. `npm run build`
+writes `out/`.
 
-After deployment, update Supabase:
+Cloudflare Pages builds straight from the Git repository, which may stay
+private. Project settings:
 
-- `Site URL`: `https://your-domain.com`
-- `Redirect URL`: `https://your-domain.com/auth/callback`
+```
+Framework preset:        Next.js (Static HTML Export)
+Build command:           npm run build
+Build output directory:  out
+```
 
-If you also use `www`, add it too:
+### Environment variables
 
-- `https://www.your-domain.com/auth/callback`
+Set these under `Settings` -> `Variables and secrets` as plain **Variables**,
+not Secrets:
+
+| Variable | Value |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase publishable key |
+| `NEXT_PUBLIC_SITE_URL` | `https://hellosandar.com` |
+| `NODE_VERSION` | `22` (also pinned by `.node-version`) |
+
+Both Supabase values are `NEXT_PUBLIC_*`, which means they are inlined into the
+JavaScript bundle at build time and readable by anyone who opens the site. That
+is by design: the publishable (anon) key is meant to be public and is guarded by
+Row Level Security. Marking them as Secrets would only mask them in the build
+log while still shipping them in the bundle. Never put the Supabase
+`service_role` key in this repository.
+
+`NEXT_PUBLIC_SITE_URL` drives `metadataBase` and the `robots.txt` sitemap entry.
+If it still points at a `*.pages.dev` address, social previews will reference
+the wrong host.
+
+### Custom domain
+
+Do not create the DNS record by hand. Cloudflare fails to resolve a custom
+CNAME that was added before the domain is registered on the project. Instead:
+
+1. `Workers & Pages` -> the project -> `Custom domains` -> `Set up a domain`.
+2. Enter `hellosandar.com`, continue, activate. Cloudflare creates the record
+   itself, proxied. Repeat for `www.hellosandar.com`.
+3. `SSL/TLS` -> `Overview`: use **Full (strict)**. *Flexible* causes a redirect
+   loop.
+4. `SSL/TLS` -> `Edge Certificates`: enable **Always Use HTTPS**.
+
+### Supabase settings after the first deploy
+
+- `Site URL`: `https://hellosandar.com`
+- `Redirect URL`: `https://hellosandar.com/auth/callback/`
+
+The trailing slash matters, because the build uses `trailingSlash: true`.
+
+### Static-export constraints
+
+Anything requiring a server is unavailable, so keep in mind:
+
+- No proxy/middleware, no Route Handlers that read the request, no Server Actions.
+- The Supabase email callback is handled client-side in
+  `src/app/auth/callback/page.tsx`.
+- Images bypass Next.js optimization (`images.unoptimized`).
 
 ## Notes
 

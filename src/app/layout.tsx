@@ -3,6 +3,7 @@ import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import type { ReactNode } from "react";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { siteUrl } from "@/lib/site";
 
 const fontSans = Manrope({
   variable: "--font-sans",
@@ -17,7 +18,7 @@ const fontDisplay = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sandar.example"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Sandar",
     template: "%s • Sandar",

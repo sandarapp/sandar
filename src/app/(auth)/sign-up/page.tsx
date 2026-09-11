@@ -7,6 +7,7 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { absoluteUrl } from "@/lib/site";
 import { createClient } from "@/lib/supabase/client";
 
 const copy = {
@@ -119,7 +120,7 @@ export default function SignUpPage() {
 
     try {
       const supabase = createClient();
-      const redirectTo = `${window.location.origin}/auth/callback?next=/`;
+      const redirectTo = absoluteUrl("/auth/callback/?next=/");
 
       const { error: signUpError } = await supabase.auth.signUp({
         email,
