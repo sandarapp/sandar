@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Must match the Worker name shown in the Cloudflare dashboard, otherwise
+  // `wrangler deploy` publishes to a different Worker.
+  "name": "sandar",
+  "compatibility_date": "2026-09-11",
+  "assets": {
+    // Output of `next build` with `output: "export"`.
+    "directory": "./out",
+    // Pairs with `trailingSlash: true` in next.config.ts: /about -> /about/
+    "html_handling": "force-trailing-slash",
+    // Serves the exported out/404.html for unknown paths.
+    "not_found_handling": "404-page"
+  }
+}

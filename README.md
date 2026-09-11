@@ -80,25 +80,38 @@ npm run lint
 npm run build
 ```
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare Workers
 
 This project builds to a fully static site (`output: "export"` in
 `next.config.ts`), so it needs no Node server at runtime. `npm run build`
-writes `out/`.
+writes `out/`, which `wrangler.jsonc` serves as Workers static assets.
 
-Cloudflare Pages builds straight from the Git repository, which may stay
-private. Project settings:
+Cloudflare Workers Builds builds straight from the Git repository, which may
+stay private.
+
+### Build configuration
 
 ```
-Framework preset:        Next.js (Static HTML Export)
-Build command:           npm run build
-Build output directory:  out
+Build command:    npm run build
+Deploy command:   npx wrangler deploy
+Root directory:   /
 ```
+
+Everything else lives in `wrangler.jsonc`. Its `name` must match the Worker
+name in the dashboard, or `wrangler deploy` will publish to a different Worker.
 
 ### Environment variables
 
-Set these under `Settings` -> `Variables and secrets` as plain **Variables**,
-not Secrets:
+Cloudflare keeps two separate sets, and this matters here:
+
+- `Settings` -> `Build` -> **Build Variables and Secrets** - visible to the
+  build command. *This is the one this project needs.*
+- `Settings` -> `Variables & Secrets` - runtime bindings only. Per Cloudflare's
+  docs, "Build variables will not be accessible at runtime", and the reverse
+  holds too: the build never sees runtime variables.
+
+Every variable below is read by `next build`, so all of them belong under
+**Build Variables and Secrets**, as plain Variables rather than Secrets:
 
 | Variable | Value |
 | --- | --- |
@@ -114,18 +127,18 @@ Row Level Security. Marking them as Secrets would only mask them in the build
 log while still shipping them in the bundle. Never put the Supabase
 `service_role` key in this repository.
 
-`NEXT_PUBLIC_SITE_URL` drives `metadataBase` and the `robots.txt` sitemap entry.
-If it still points at a `*.pages.dev` address, social previews will reference
-the wrong host.
+If they are missing at build time the build still succeeds, but sign-in and
+sign-up fail in the browser and metadata falls back to `http://localhost:3000`.
 
 ### Custom domain
 
-Do not create the DNS record by hand. Cloudflare fails to resolve a custom
-CNAME that was added before the domain is registered on the project. Instead:
+Do not create the DNS record by hand; Cloudflare "will create a new DNS record
+for you" and refuses a hostname that already has a CNAME record.
 
-1. `Workers & Pages` -> the project -> `Custom domains` -> `Set up a domain`.
-2. Enter `hellosandar.com`, continue, activate. Cloudflare creates the record
-   itself, proxied. Repeat for `www.hellosandar.com`.
+1. `Workers & Pages` -> the Worker -> `Settings` -> `Domains & Routes` ->
+   `Add` -> `Custom Domain`.
+2. Enter `hellosandar.com`, select **Add Custom Domain**. Repeat for
+   `www.hellosandar.com`.
 3. `SSL/TLS` -> `Overview`: use **Full (strict)**. *Flexible* causes a redirect
    loop.
 4. `SSL/TLS` -> `Edge Certificates`: enable **Always Use HTTPS**.
