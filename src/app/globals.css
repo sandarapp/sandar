@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  /* Sandar palette (tuned to the provided boards) */
+  --sandar-bg: #faf6f1;
+  --sandar-surface: #f5ede4;
+  --sandar-surface-2: #f1e6dc;
+  --sandar-border: #eadbd0;
+
+  --sandar-fg: #2b1f1b;
+  --sandar-muted: #6f5d56;
+
+  --sandar-primary: #c65a3f; /* terracotta */
+  --sandar-primary-600: #b24d35;
+  --sandar-primary-200: #f0c6b2;
+
+  --sandar-shadow: 0 16px 48px rgba(43, 31, 27, 0.12);
+  --sandar-shadow-soft: 0 10px 28px rgba(43, 31, 27, 0.10);
+
+  --sandar-radius-lg: 28px;
+  --sandar-radius-md: 18px;
+  --sandar-radius-sm: 14px;
+}
+
+@theme inline {
+  --color-bg: var(--sandar-bg);
+  --color-surface: var(--sandar-surface);
+  --color-surface-2: var(--sandar-surface-2);
+  --color-border: var(--sandar-border);
+
+  --color-fg: var(--sandar-fg);
+  --color-muted: var(--sandar-muted);
+
+  --color-primary: var(--sandar-primary);
+  --color-primary-600: var(--sandar-primary-600);
+  --color-primary-200: var(--sandar-primary-200);
+
+  --shadow-soft: var(--sandar-shadow-soft);
+  --shadow-card: var(--sandar-shadow);
+
+  --radius-lg: var(--sandar-radius-lg);
+  --radius-md: var(--sandar-radius-md);
+  --radius-sm: var(--sandar-radius-sm);
+
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+body {
+  background: var(--sandar-bg);
+  color: var(--sandar-fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  text-rendering: geometricPrecision;
+}
+
+* {
+  text-decoration-thickness: from-font;
+  text-underline-offset: 2px;
+}
