@@ -91,15 +91,15 @@ export default function PartnersPage() {
           <BackButton label={t.back} fallbackHref="/" />
         </Reveal>
 
-        <section className="grid gap-8 lg:grid-cols-[0.95fr_0.95fr] lg:items-start">
+        <section className="space-y-6">
           <Reveal className="space-y-5">
             <span className="inline-flex rounded-full border border-border bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
               {t.eyebrow}
             </span>
-            <h1 className="max-w-xl font-[var(--font-display)] text-5xl leading-[0.95] tracking-tight text-fg sm:text-6xl">
+            <h1 className="max-w-3xl font-[var(--font-display)] text-5xl leading-[0.95] tracking-tight text-fg sm:text-6xl">
               {t.title}
             </h1>
-            <p className="max-w-xl text-base leading-7 text-muted sm:text-lg">
+            <p className="max-w-3xl text-base leading-7 text-muted sm:text-lg">
               {t.description}
             </p>
             <div className="flex flex-wrap gap-3">
@@ -115,13 +115,14 @@ export default function PartnersPage() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <Card className="overflow-hidden rounded-[28px] p-4 shadow-card">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] border border-border">
+            <Card className="overflow-hidden rounded-[32px] p-3 shadow-card">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-[26px] border border-border">
                 <Image
-                  src="/assets/prototype-v2/partners-v2.png"
-                  alt="Partners prototype"
+                  src="/assets/page-heroes/partners-hero.png"
+                  alt="Partners visual"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-center"
+                  priority
                 />
               </div>
             </Card>
@@ -208,4 +209,3 @@ export default function PartnersPage() {
     </div>
   );
 }
-
