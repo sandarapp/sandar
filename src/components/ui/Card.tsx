@@ -11,9 +11,8 @@ export function Card({ className, variant = "solid", ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-md)] border border-border",
-        variant === "solid" && "bg-white/80 shadow-card",
-        variant === "glass" && "bg-white/55 backdrop-blur shadow-soft",
+        "rounded-[var(--radius-md)] border border-border bg-card",
+        variant === "glass" && "bg-card/80",
         className
       )}
       {...props}

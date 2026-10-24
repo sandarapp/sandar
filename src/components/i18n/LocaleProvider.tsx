@@ -11,6 +11,40 @@ type LocaleContextValue = {
 
 const LocaleContext = React.createContext<LocaleContextValue | null>(null);
 
+const STORAGE_KEY = "sandar-locale";
+const listeners = new Set<() => void>();
+// Keeps the choice for this visit when localStorage is unavailable.
+let sessionLocale: Locale | null = null;
+
+function readLocale(): Locale | null {
+  if (sessionLocale) return sessionLocale;
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "en" || stored === "id" ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    listeners.delete(onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function writeLocale(nextLocale: Locale) {
+  sessionLocale = nextLocale;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, nextLocale);
+  } catch {
+    // Ignore: sessionLocale still applies for this visit.
+  }
+  listeners.forEach((notify) => notify());
+}
+
 export function LocaleProvider({
   children,
   defaultLocale = "en",
@@ -18,17 +52,20 @@ export function LocaleProvider({
   children: React.ReactNode;
   defaultLocale?: Locale;
 }) {
-  const [locale, setLocaleState] = React.useState<Locale>(() => {
-    if (typeof window === "undefined") return defaultLocale;
-    const stored = window.localStorage.getItem("sandar-locale") as
-      | Locale
-      | null;
-    return stored === "en" || stored === "id" ? stored : defaultLocale;
-  });
+  // The server snapshot is the default, so static HTML and hydration match;
+  // React then re-renders with the stored preference.
+  const locale = React.useSyncExternalStore(
+    subscribe,
+    () => readLocale() ?? defaultLocale,
+    () => defaultLocale
+  );
+
+  React.useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const setLocale = React.useCallback((nextLocale: Locale) => {
-    setLocaleState(nextLocale);
-    window.localStorage.setItem("sandar-locale", nextLocale);
+    writeLocale(nextLocale);
   }, []);
 
   const value = React.useMemo(() => ({ locale, setLocale }), [locale, setLocale]);

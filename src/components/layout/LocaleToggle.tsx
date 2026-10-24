@@ -9,9 +9,10 @@ export function LocaleToggle({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full border border-border bg-white/70 p-1 shadow-soft",
+        "inline-flex items-center rounded-[12px] border border-border bg-card p-0.5",
         className
       )}
+      role="group"
       aria-label="Language switcher"
     >
       {(["en", "id"] as const).map((item) => (
@@ -19,10 +20,11 @@ export function LocaleToggle({ className }: { className?: string }) {
           key={item}
           type="button"
           onClick={() => setLocale(item)}
+          aria-pressed={locale === item}
           className={cn(
-            "rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] transition",
+            "min-h-10 min-w-11 rounded-[10px] px-2 text-xs font-semibold uppercase tracking-[0.12em] transition",
             locale === item
-              ? "bg-primary text-white"
+              ? "bg-surface-2 text-primary-600"
               : "text-muted hover:text-fg"
           )}
         >
