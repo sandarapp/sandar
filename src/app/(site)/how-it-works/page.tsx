@@ -1,154 +1,160 @@
 "use client";
 
+import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Container } from "@/components/layout/Container";
-import { Reveal } from "@/components/motion/Reveal";
-import { BackButton } from "@/components/navigation/BackButton";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import { ButtonLink } from "@/components/ui/Button";
+import { FadeUp, MaskWord } from "@/components/landing/motion";
+import { PhotoWithCard } from "@/components/landing/PhotoWithCard";
+import { createAccountHref, logInHref } from "@/lib/site";
 
 const copy = {
-  en: {
-    back: "Back",
-    eyebrow: "How it works",
-    title: "Understand the journey before you decide to join.",
-    description:
-      "Sandar is designed to help adults explore support with calm, structure, and choice. This page walks through the shape of the experience before any sign-up, programme step, or participation feels too committed.",
-    columns: [
-      {
-        title: "Discover",
-        points: [
-          "See what kinds of communities, programmes, and facilitated support exist.",
-          "Preview room tone before joining.",
-          "Explore support without pressure.",
-        ],
-      },
-      {
-        title: "Understand",
-        points: [
-          "Read how moderation, privacy, and support boundaries work.",
-          "Clarify what counts as peer support and what does not.",
-          "Understand how Sandar protects adults entering with care.",
-        ],
-      },
-      {
-        title: "Choose with steadier context",
-        points: [
-          "Decide what feels right: open conversation, pseudonymous participation, or facilitated groups.",
-          "Choose a route with clearer expectations and less noise.",
-        ],
-      },
-      {
-        title: "Join",
-        points: [
-          "Participate at your own pace.",
-          "Start quietly if needed, then move closer when ready.",
-          "Find a next step without forcing intensity too early.",
-        ],
-      },
-    ],
-    boundaryTitle: "Why boundaries matter",
-    boundaryText:
-      "People arrive with different histories, sensitivities, and comfort levels. Sandar uses visible boundaries to make early participation feel clearer, kinder, and easier to trust.",
-    boundaryCards: [
-      "Pseudonym options create space between identity and participation.",
-      "Adults-only framing keeps expectations focused and contextual.",
-      "Clear support boundaries reduce confusion and pressure.",
-      "Guided escalation routes keep urgent needs distinct from peer support.",
-    ],
-    timingTitle: "Before, during, and after participation",
-    timingCards: [
-      {
-        title: "Before",
-        text: "Read room details, safety signals, and whether the format feels grounded enough for you to enter.",
-      },
-      {
-        title: "During",
-        text: "Move carefully, follow the room pace, and choose whether to listen, respond, or ask for facilitated structure.",
-      },
-      {
-        title: "After",
-        text: "Revisit later, continue gently, or step back without losing the clarity of what comes next.",
-      },
-    ],
-    closingTitle: "After this page, Sandar should feel clearer.",
-    closingText:
-      "Because the goal is not pressure. It is enough understanding for a person to choose the next step with more confidence.",
-    primary: "Join Sandar",
-    secondary: "See programmes later",
-  },
   id: {
-    back: "Kembali",
-    eyebrow: "Cara kerja",
-    title: "Pahami perjalanannya sebelum memutuskan bergabung.",
-    description:
-      "Sandar dirancang untuk membantu orang dewasa menjelajahi dukungan dengan tenang, terstruktur, dan tetap punya pilihan. Halaman ini menjelaskan bentuk pengalamannya sebelum pendaftaran atau partisipasi terasa terlalu besar.",
-    columns: [
+    title: "Minggu pertamamu di Sandar",
+    intro: "Kira-kira begini kalau kamu baru daftar hari ini. Nggak ada yang harus buru-buru.",
+    days: [
       {
-        title: "Menemukan",
-        points: [
-          "Lihat jenis komunitas, program, dan dukungan terfasilitasi yang tersedia.",
-          "Rasakan nada ruang sebelum bergabung.",
-          "Menjelajah tanpa tekanan.",
-        ],
+        when: "Hari 1",
+        title: "Daftar",
+        text: "Pakai email dan kata sandi. Setelah klik tautan di email, ada beberapa pertanyaan singkat: usia, kota, dan topik yang ingin kamu ikuti. Kami nggak tanya soal diagnosis.",
+        chips: ["Stres & burnout", "Kesepian", "Kerja & kuliah"],
       },
       {
-        title: "Memahami",
-        points: [
-          "Pelajari cara kerja moderasi, privasi, dan batas dukungan.",
-          "Pahami apa yang termasuk dukungan sebaya dan apa yang bukan.",
-          "Lihat bagaimana Sandar menjaga proses awal tetap lebih aman bagi orang dewasa.",
-        ],
+        when: "Hari 1",
+        title: "Lihat ruang yang cocok",
+        text: "Sandar menyarankan beberapa ruang dari topik yang kamu pilih, lengkap dengan alasannya.",
+        card: { label: "Karena kamu pilih Stres & burnout", name: "Stres Kerja & Burnout" },
       },
       {
-        title: "Memilih dengan konteks yang lebih stabil",
-        points: [
-          "Tentukan apa yang terasa tepat: percakapan terbuka, partisipasi dengan nama samaran, atau kelompok terfasilitasi.",
-          "Pilih jalur dengan ekspektasi yang lebih jelas dan kebisingan yang lebih rendah.",
-        ],
+        when: "Hari 2",
+        title: "Baca dulu",
+        text: "Kamu bisa baca isi ruang sebelum memutuskan apa-apa. Banyak orang berhenti di sini untuk sementara, dan itu nggak apa-apa.",
+        quote: "Aku kira cuma aku yang kayak gini.",
       },
       {
-        title: "Bergabung",
-        points: [
-          "Berpartisipasi sesuai kecepatanmu.",
-          "Mulai dengan tenang jika perlu, lalu mendekat saat siap.",
-          "Menemukan langkah berikutnya tanpa memaksa intensitas terlalu cepat.",
-        ],
-      },
-    ],
-    boundaryTitle: "Mengapa batas itu penting",
-    boundaryText:
-      "Setiap orang datang dengan sejarah, sensitivitas, dan tingkat kenyamanan yang berbeda. Sandar memakai batas yang terlihat agar partisipasi awal terasa lebih jelas, ramah, dan lebih mudah dipercaya.",
-    boundaryCards: [
-      "Pilihan nama samaran memberi jarak sehat antara identitas dan partisipasi.",
-      "Framing dewasa 18+ menjaga konteks tetap tepat.",
-      "Batas dukungan yang jelas mengurangi kebingungan dan tekanan.",
-      "Jalur eskalasi yang dipandu menjaga kebutuhan mendesak tetap berbeda dari peer support.",
-    ],
-    timingTitle: "Sebelum, saat, dan sesudah berpartisipasi",
-    timingCards: [
-      {
-        title: "Sebelum",
-        text: "Baca detail ruang, isyarat keamanan, dan apakah formatnya terasa cukup stabil untuk dimasuki.",
+        when: "Hari 3",
+        title: "Gabung ruang",
+        text: "Sebelum gabung, kamu lihat aturan ruang dan siapa moderatornya, lalu setuju dengan aturannya.",
+        rules: ["Nggak ada saran obat", "Cerita orang lain tetap di sini", "Boleh anonim"],
       },
       {
-        title: "Saat",
-        text: "Bergerak dengan hati-hati, ikuti ritme ruang, dan pilih apakah kamu ingin membaca, merespons, atau masuk ke format yang lebih terfasilitasi.",
+        when: "Hari 5",
+        title: "Kasih reaksi",
+        text: "Kalau ada cerita yang terasa dekat, kirim Dukung atau Relate. Orangnya tahu ada yang membaca.",
+        reactions: ["Dukung 12", "Relate 7"],
       },
       {
-        title: "Sesudah",
-        text: "Datang kembali nanti, lanjutkan pelan-pelan, atau jeda tanpa kehilangan kejelasan soal langkah berikutnya.",
+        when: "Nanti",
+        title: "Posting dan komentar",
+        text: "Belum dibuka. Kami tunggu tim moderasi lengkap dulu. Kamu akan dapat email begitu sudah bisa.",
       },
     ],
-    closingTitle: "Sesudah membaca halaman ini, Sandar seharusnya terasa lebih jelas.",
-    closingText:
-      "Tujuannya bukan menekan. Cukup memberi pemahaman agar seseorang bisa memilih langkah selanjutnya dengan lebih yakin.",
-    primary: "Gabung Sandar",
-    secondary: "Program nanti",
+    safeTitle: "Kalau ada yang nggak beres",
+    safe: [
+      "Laporkan postingan atau orang yang bikin nggak nyaman. Laporan masuk ke moderator dan tim keamanan Sandar.",
+      "Blokir seseorang, dan kamu nggak akan lihat postingannya lagi.",
+      "Tombol \"Butuh bantuan sekarang?\" ada di setiap ruang, isinya nomor layanan darurat resmi.",
+    ],
+    cta: "Buat akun gratis",
+    have: "Sudah punya akun?",
+    logIn: "Masuk",
+  },
+  en: {
+    title: "Your first week on Sandar",
+    intro: "Roughly what happens if you sign up today. There's no rush.",
+    days: [
+      {
+        when: "Day 1",
+        title: "Sign up",
+        text: "Use your email and a password. After you click the link we send, there are a few short questions: your age, your city and the topics you'd like to follow. We don't ask about diagnoses.",
+        chips: ["Stress & burnout", "Loneliness", "Work & study"],
+      },
+      {
+        when: "Day 1",
+        title: "See spaces that fit",
+        text: "Sandar suggests a few spaces based on the topics you picked, and tells you why.",
+        card: { label: "Because you picked Stress & burnout", name: "Work Stress & Burnout" },
+      },
+      {
+        when: "Day 2",
+        title: "Read first",
+        text: "You can read a space before deciding anything. Lots of people stay here for a while, and that's okay.",
+        quote: "I thought it was just me.",
+      },
+      {
+        when: "Day 3",
+        title: "Join a space",
+        text: "Before you join, you see the space rules and who moderates it, then agree to the rules.",
+        rules: ["No medication advice", "What's shared here stays here", "Anonymous is fine"],
+      },
+      {
+        when: "Day 5",
+        title: "React",
+        text: "When a story feels close, send Support or Relate. The person knows someone read it.",
+        reactions: ["Support 12", "Relate 7"],
+      },
+      {
+        when: "Later",
+        title: "Posting and comments",
+        text: "Not open yet. We're waiting until the moderation team is complete. You'll get an email when it opens.",
+      },
+    ],
+    safeTitle: "If something feels wrong",
+    safe: [
+      "Report a post or person that makes you uncomfortable. Reports go to moderators and Sandar's safety team.",
+      "Block someone and you won't see their posts again.",
+      "Every space has a \"Need help now?\" button with official emergency numbers.",
+    ],
+    cta: "Create a free account",
+    have: "Already have an account?",
+    logIn: "Log in",
   },
 } as const;
+
+type Day = (typeof copy)["id"]["days"][number] | (typeof copy)["en"]["days"][number];
+
+function Fragment({ day }: { day: Day }) {
+  if ("chips" in day)
+    return (
+      <div className="flex flex-wrap gap-2">
+        {day.chips.map((c, i) => (
+          <span key={c} className={i === 0 ? "rounded-full bg-primary px-3 py-1.5 text-sm text-white" : "rounded-full border border-border bg-card px-3 py-1.5 text-sm text-fg"}>{c}</span>
+        ))}
+      </div>
+    );
+  if ("card" in day)
+    return (
+      <div className="max-w-sm rounded-2xl border border-border bg-card p-4">
+        <p className="text-xs font-semibold text-primary-600">{day.card.label}</p>
+        <p className="mt-1 font-display text-lg text-fg">{day.card.name}</p>
+      </div>
+    );
+  if ("quote" in day)
+    return (
+      <div className="max-w-sm">
+        <PhotoWithCard src="/assets/sandar/tea.jpg" aspect="aspect-[3/2]" overlap="-mt-10">
+          <p className="rounded-2xl bg-card px-4 py-3 text-[15px] italic text-fg shadow-soft">&ldquo;{day.quote}&rdquo;</p>
+        </PhotoWithCard>
+      </div>
+    );
+  if ("rules" in day)
+    return (
+      <ul className="max-w-sm space-y-1.5 rounded-2xl border border-border bg-card p-4 text-sm text-fg">
+        {day.rules.map((r) => <li key={r}>· {r}</li>)}
+      </ul>
+    );
+  if ("reactions" in day)
+    return (
+      <div className="flex gap-2">
+        {day.reactions.map((r, i) => (
+          <span key={r} className={i === 0 ? "rounded-full bg-primary px-3 py-1.5 text-sm text-white" : "rounded-full border border-border bg-card px-3 py-1.5 text-sm text-fg"}>{r}</span>
+        ))}
+      </div>
+    );
+  return null;
+}
 
 export default function HowItWorksPage() {
   const { locale } = useLocale();
@@ -156,133 +162,59 @@ export default function HowItWorksPage() {
 
   return (
     <div className="bg-bg">
-      <Container className="py-8 sm:py-12">
-        <Reveal className="mb-6">
-          <BackButton label={t.back} fallbackHref="/" />
-        </Reveal>
+      <Container className="max-w-4xl pb-20 pt-12 sm:pt-20">
+        <FadeUp onLoad>
+          <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] leading-tight text-fg">
+            {t.title.split(" ").map((word, i) => (
+              <React.Fragment key={i}>
+                <MaskWord delay={0.08 * i}>{word}</MaskWord>{" "}
+              </React.Fragment>
+            ))}
+          </h1>
+          <p className="mt-4 max-w-xl text-lg leading-8 text-muted">{t.intro}</p>
+        </FadeUp>
+        <FadeUp onLoad delay={0.1} className="relative mt-10 aspect-[2/1] overflow-hidden rounded-[24px]">
+          <Image src="/assets/sandar/window.jpg" alt="" fill priority sizes="(min-width: 896px) 896px, 100vw" className="object-cover" />
+        </FadeUp>
 
-        <section className="space-y-6">
-          <Reveal className="space-y-5">
-            <span className="inline-flex rounded-full border border-border bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-              {t.eyebrow}
-            </span>
-            <h1 className="max-w-3xl font-[var(--font-display)] text-5xl leading-[0.95] tracking-tight text-fg sm:text-6xl">
-              {t.title}
-            </h1>
-            <p className="max-w-3xl text-base leading-7 text-muted sm:text-lg">
-              {t.description}
-            </p>
-            <div className="flex gap-3">
-              <Link href="/sign-up">
-                <Button>{t.primary}</Button>
-              </Link>
-              <Link href="/safety">
-                <Button variant="secondary">{locale === "en" ? "See safety" : "Lihat keamanan"}</Button>
-              </Link>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <Card className="overflow-hidden rounded-[32px] p-3 shadow-card">
-              <div className="relative aspect-[16/9] overflow-hidden rounded-[26px] border border-border">
-                <Image
-                  src="/assets/page-heroes/how-it-works-hero.png"
-                  alt="How it works visual"
-                  fill
-                  className="object-cover object-center"
-                  priority
-                />
-              </div>
-            </Card>
-          </Reveal>
-        </section>
-
-        <section className="mt-14">
-          <Reveal className="space-y-3">
-            <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-              {locale === "en"
-                ? "How people move through Sandar"
-                : "Bagaimana orang bergerak melalui Sandar"}
-            </h2>
-          </Reveal>
-          <div className="mt-6 grid gap-4 lg:grid-cols-4">
-            {t.columns.map((column, index) => (
-              <Reveal key={column.title} delay={index * 0.04}>
-                <Card className="h-full rounded-[24px] p-5 shadow-soft">
-                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-                    {column.title}
-                  </p>
-                  <div className="space-y-3">
-                    {column.points.map((point) => (
-                      <p key={point} className="text-sm leading-6 text-muted">
-                        {point}
-                      </p>
-                    ))}
+        <ol className="mt-14">
+          {t.days.map((day, i) => (
+            <FadeUp key={day.title} delay={0.05}>
+              <li className="grid grid-cols-[72px_1fr] gap-4 sm:grid-cols-[110px_1fr] sm:gap-8">
+                <p className="pt-1 text-sm font-semibold text-primary-600">{day.when}</p>
+                <div className={i === t.days.length - 1 ? "pb-2" : "border-l border-border pb-12 pl-6 sm:pl-8"}>
+                  <div className={i === t.days.length - 1 ? "border-l border-dashed border-border pl-6 sm:pl-8" : ""}>
+                    <h2 className="font-display text-2xl text-fg">{day.title}</h2>
+                    <p className="mt-2 max-w-xl text-base leading-7 text-muted">{day.text}</p>
+                    <div className="mt-4">
+                      <Fragment day={day} />
+                    </div>
                   </div>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </section>
+                </div>
+              </li>
+            </FadeUp>
+          ))}
+        </ol>
 
-        <section className="mt-14 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <Reveal className="space-y-4">
-            <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-              {t.boundaryTitle}
-            </h2>
-            <p className="text-base leading-7 text-muted">{t.boundaryText}</p>
-          </Reveal>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {t.boundaryCards.map((card, index) => (
-              <Reveal key={card} delay={index * 0.04}>
-                <Card className="rounded-[22px] p-5 shadow-soft">
-                  <p className="text-sm leading-6 text-muted">{card}</p>
-                </Card>
-              </Reveal>
+        <FadeUp className="mt-16 rounded-[24px] bg-surface p-8">
+          <h2 className="font-display text-2xl text-fg">{t.safeTitle}</h2>
+          <ul className="mt-4 space-y-3">
+            {t.safe.map((s) => (
+              <li key={s} className="flex gap-3 text-base leading-7 text-fg">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                {s}
+              </li>
             ))}
-          </div>
-        </section>
+          </ul>
+        </FadeUp>
 
-        <section className="mt-14">
-          <Reveal className="space-y-3">
-            <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-              {t.timingTitle}
-            </h2>
-          </Reveal>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {t.timingCards.map((card, index) => (
-              <Reveal key={card.title} delay={index * 0.05}>
-                <Card className="h-full rounded-[24px] p-5 shadow-soft">
-                  <p className="font-semibold text-fg">{card.title}</p>
-                  <p className="mt-2 text-sm leading-6 text-muted">{card.text}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <Reveal className="mt-14">
-          <Card className="rounded-[28px] p-6 shadow-card sm:p-8">
-            <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-                  {t.closingTitle}
-                </h2>
-                <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-                  {t.closingText}
-                </p>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/sign-up">
-                  <Button>{t.primary}</Button>
-                </Link>
-                <Link href="/">
-                  <Button variant="secondary">{t.secondary}</Button>
-                </Link>
-              </div>
-            </div>
-          </Card>
-        </Reveal>
+        <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <ButtonLink href={createAccountHref} size="lg">{t.cta}</ButtonLink>
+          <p className="text-sm text-muted">
+            {t.have}{" "}
+            <Link href={logInHref} className="font-semibold text-fg underline underline-offset-4">{t.logIn}</Link>
+          </p>
+        </div>
       </Container>
     </div>
   );

@@ -1,19 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Noto_Sans, Noto_Serif } from "next/font/google";
 import "./globals.css";
 import type { ReactNode } from "react";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { colors } from "@/design/tokens";
 import { siteUrl } from "@/lib/site";
 
-const fontSans = Manrope({
+const fontSans = Noto_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
-const fontDisplay = Fraunces({
+const fontDisplay = Noto_Serif({
   variable: "--font-display",
   subsets: ["latin"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s • Sandar",
   },
   description:
-    "A supportive space for today and tomorrow. Real people, real support, brighter days ahead.",
+    "Adult peer-support communities in Indonesia. Find a space that fits, take part at your own pace. Not an emergency service.",
   applicationName: "Sandar",
   keywords: [
     "community",
@@ -53,7 +55,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#FAF6F1",
+  themeColor: colors.bg,
 };
 
 export default function RootLayout({

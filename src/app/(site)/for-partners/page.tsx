@@ -1,82 +1,113 @@
 "use client";
 
-import Image from "next/image";
+import * as React from "react";
 import Link from "next/link";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Container } from "@/components/layout/Container";
-import { Reveal } from "@/components/motion/Reveal";
-import { BackButton } from "@/components/navigation/BackButton";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import { ButtonLink } from "@/components/ui/Button";
+import { FadeUp, MaskWord } from "@/components/landing/motion";
+import { PhotoWithCard } from "@/components/landing/PhotoWithCard";
+import { Thread } from "@/components/landing/Thread";
+import { logInHref, registerCommunityHref } from "@/lib/site";
 
 const copy = {
-  en: {
-    back: "Back",
-    eyebrow: "For partners",
-    title: "Launch a trusted pilot with community partners.",
-    description:
-      "Sandar helps trusted organisations run peer support experiences with clearer structure, safer entry, and a calmer member journey. This page outlines what a pilot can support and what makes the experience easier for participants to enter.",
-    heroPoints: ["Built for pilots", "Focused partner process", "Clear member journey"],
-    featureTitle: "What partners receive, and what users feel.",
-    featureCards: [
-      "Partner alignment tools that frame who the community is for, what the experience offers, and how people should enter it.",
-      "Trust cues and room framing that explain purpose, audience, and boundaries before someone participates.",
-      "Adult-only pilot safety framing that keeps context appropriate and easier to trust.",
-    ],
-    systemsTitle: "What partners receive from Sandar",
-    systemsCards: [
-      "Clear intake parameters for audience, pacing, support tone, and participation design.",
-      "Partner-facing guidance on what will be surfaced to users and how support gets framed.",
-      "Operational support to help members move through discovery, joining, and follow-up with more clarity.",
-      "Lighter-weight administration for organisations that need structure without building a full custom platform.",
-    ],
-    trustTitle: "What the partnership makes possible for users.",
-    trustCards: [
-      "Clearer discovery of who the space is for.",
-      "Safer expectations around boundaries and participation.",
-      "Structured joining experiences without heavy onboarding friction.",
-      "Gentler support flow from arrival to next step.",
-    ],
-    finalTitle:
-      "If your organisation wants a better support experience for its community, let us talk.",
-    finalText:
-      "Sandar is looking for a small number of trusted pilots where calm structure, user clarity, and safer entry matter.",
-    finalPrimary: "Start the conversation",
-    finalSecondary: "Refer to partner deck later",
-  },
   id: {
-    back: "Kembali",
-    eyebrow: "Untuk mitra",
-    title: "Luncurkan pilot yang terpercaya bersama mitra komunitas.",
-    description:
-      "Sandar membantu organisasi tepercaya menjalankan pengalaman peer support dengan struktur yang lebih jelas, pintu masuk yang lebih aman, dan perjalanan member yang lebih tenang. Halaman ini menjelaskan apa yang dapat didukung sebuah pilot dan mengapa pengalamannya lebih mudah dimasuki peserta.",
-    heroPoints: ["Dibuat untuk pilot", "Proses mitra yang fokus", "Journey member yang jelas"],
-    featureTitle: "Apa yang diterima mitra, dan apa yang dirasakan pengguna.",
-    featureCards: [
-      "Alat penyelarasan mitra untuk menjelaskan siapa komunitas ini ditujukan, apa yang ditawarkan, dan bagaimana orang seharusnya masuk ke dalamnya.",
-      "Trust cue dan framing ruang yang menjelaskan tujuan, audiens, dan batas sebelum seseorang berpartisipasi.",
-      "Framing keamanan dewasa 18+ yang menjaga konteks tetap tepat dan lebih mudah dipercaya.",
+    title: "Kamu mengelola kelompok dukungan?",
+    intro:
+      "Daftarkan di Sandar. Orang yang mencari kelompok seperti punyamu jadi lebih gampang menemukannya, dan kamu nggak menjaga ruangnya sendirian.",
+    cta: "Daftarkan komunitas",
+    steps: "Lihat caranya",
+    small: "Gratis. Kelompok informal juga bisa.",
+    thread: {
+      space: "Ruang komunitasmu",
+      members: "Tampilan pengelola",
+      caption: "Contoh. Begini kira-kira saat ada laporan di ruangmu.",
+      labels: { support: "Dukung", relate: "Relate", typing: "" },
+      messages: [
+        { author: "Laporan baru", time: "21.40", text: "Seorang anggota melaporkan postingan yang berisi saran obat." },
+        { author: "Tim keamanan Sandar", time: "21.52", text: "Sudah kami tinjau. Postingan disembunyikan dan penulisnya dapat pengingat aturan.", mod: true },
+        { author: "Kamu", time: "22.05", text: "Makasih, aku tambahin juga di pengumuman ruang." },
+      ],
+    },
+    whatTitle: "Yang kamu dapat",
+    what: [
+      { t: "Lebih gampang ditemukan", d: "Ruangmu muncul untuk orang yang memilih topik yang sama." },
+      { t: "Ada yang bantu jaga", d: "Laporan sampai juga ke tim keamanan Sandar, bukan cuma ke moderatormu." },
+      { t: "Satu halaman yang jelas", d: "Tujuan, aturan, dan moderator terlihat sebelum orang bergabung." },
     ],
-    systemsTitle: "Apa yang diterima mitra dari Sandar",
-    systemsCards: [
-      "Parameter intake yang jelas untuk audiens, ritme, tone dukungan, dan desain partisipasi.",
-      "Panduan untuk mitra mengenai apa yang akan ditampilkan ke pengguna dan bagaimana dukungan dibingkai.",
-      "Dukungan operasional untuk membantu anggota bergerak melalui penemuan, bergabung, dan tindak lanjut dengan lebih jelas.",
-      "Administrasi yang lebih ringan bagi organisasi yang butuh struktur tanpa harus membangun platform kustom penuh.",
+    later: "Acara, program, dan pelatihan untuk pendamping menyusul setelah peluncuran.",
+    howTitle: "Cara daftar",
+    how: [
+      { t: "Buat akun", d: "Pilih \"Komunitas\" waktu daftar." },
+      { t: "Ceritakan kelompokmu", d: "Untuk siapa, tujuannya apa, dan aturannya." },
+      { t: "Kami verifikasi", d: "Kami cek data pengelola dan moderatornya." },
+      { t: "Ruangmu tayang", d: "Mulai muncul di halaman Jelajah." },
     ],
-    trustTitle: "Apa yang dimungkinkan kemitraan ini untuk pengguna.",
-    trustCards: [
-      "Penemuan yang lebih jelas tentang siapa ruang ini ditujukan.",
-      "Ekspektasi yang lebih aman mengenai batas dan partisipasi.",
-      "Pengalaman bergabung yang terstruktur tanpa onboarding yang terlalu berat.",
-      "Alur dukungan yang lebih lembut dari kedatangan hingga langkah berikutnya.",
+    prepTitle: "Siapkan dulu",
+    prep: [
+      "Nama dan deskripsi singkat kelompokmu",
+      "Untuk siapa, dan topik utamanya",
+      "Aturan kelompok",
+      "Kontak minimal satu moderator",
+      "Link media sosial atau website, kalau ada",
     ],
-    finalTitle:
-      "Kalau organisasimu ingin pengalaman dukungan yang lebih baik untuk komunitasnya, mari bicara.",
-    finalText:
-      "Sandar sedang mencari sejumlah kecil pilot tepercaya di mana struktur yang tenang, kejelasan pengguna, dan pintu masuk yang lebih aman benar-benar penting.",
-    finalPrimary: "Mulai percakapan",
-    finalSecondary: "Baca partner deck nanti",
+    faqTitle: "Pertanyaan",
+    faq: [
+      { q: "Ada biayanya?", a: "Nggak. Daftar dan mengelola ruang gratis." },
+      { q: "Harus berbadan hukum?", a: "Nggak. Kelompok informal bisa daftar. Yang kami verifikasi adalah orang-orang yang mengelolanya." },
+      { q: "Anggota kami bisa posting?", a: "Untuk sekarang anggota bisa membaca dan memberi reaksi. Posting dibuka setelah tim moderasi kami lengkap." },
+    ],
+    have: "Sudah terdaftar?",
+    logIn: "Masuk",
+  },
+  en: {
+    title: "Do you run a support group?",
+    intro:
+      "Register it on Sandar. People looking for a group like yours can find it more easily, and you don't have to look after the space alone.",
+    cta: "Register a community",
+    steps: "See how",
+    small: "Free. Informal groups welcome.",
+    thread: {
+      space: "Your community space",
+      members: "Admin view",
+      caption: "Example. Roughly what you see when someone reports a post in your space.",
+      labels: { support: "Support", relate: "Relate", typing: "" },
+      messages: [
+        { author: "New report", time: "21:40", text: "A member reported a post that gives medication advice." },
+        { author: "Sandar safety team", time: "21:52", text: "We've reviewed it. The post is hidden and the author got a reminder about the rules.", mod: true },
+        { author: "You", time: "22:05", text: "Thanks, I'll mention it in the space announcement too." },
+      ],
+    },
+    whatTitle: "What you get",
+    what: [
+      { t: "Easier to find", d: "Your space shows up for people who picked the same topics." },
+      { t: "Help looking after it", d: "Reports also reach Sandar's safety team, not only your moderators." },
+      { t: "One clear page", d: "Purpose, rules and moderators, visible before anyone joins." },
+    ],
+    later: "Events, programs and helper training come after launch.",
+    howTitle: "How to register",
+    how: [
+      { t: "Create an account", d: "Choose \"Community\" when you sign up." },
+      { t: "Tell us about your group", d: "Who it's for, what it's for, and its rules." },
+      { t: "We verify you", d: "We check the people who run it and its moderators." },
+      { t: "Your space goes live", d: "It starts showing up in Discover." },
+    ],
+    prepTitle: "Have these ready",
+    prep: [
+      "Your group's name and a short description",
+      "Who it's for, and its main topics",
+      "Your group rules",
+      "Contact for at least one moderator",
+      "Social media or website link, if you have one",
+    ],
+    faqTitle: "Questions",
+    faq: [
+      { q: "Does it cost anything?", a: "No. Registering and running a space is free." },
+      { q: "Do we need a legal entity?", a: "No. Informal groups can register. We verify the people who run them." },
+      { q: "Can our members post?", a: "For now members can read and react. Posting opens once our moderation team is complete." },
+    ],
+    have: "Already registered?",
+    logIn: "Log in",
   },
 } as const;
 
@@ -86,126 +117,110 @@ export default function PartnersPage() {
 
   return (
     <div className="bg-bg">
-      <Container className="py-8 sm:py-12">
-        <Reveal className="mb-6">
-          <BackButton label={t.back} fallbackHref="/" />
-        </Reveal>
+      <section className="pb-16 pt-12 sm:pb-24 sm:pt-20">
+        <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <FadeUp onLoad>
+            <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] leading-tight text-fg">
+            {t.title.split(" ").map((word, i) => (
+              <React.Fragment key={i}>
+                <MaskWord delay={0.08 * i}>{word}</MaskWord>{" "}
+              </React.Fragment>
+            ))}
+          </h1>
+            <p className="mt-6 max-w-lg text-lg leading-8 text-muted">{t.intro}</p>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <ButtonLink href={registerCommunityHref} size="lg">{t.cta}</ButtonLink>
+              <Link href="#steps" className="inline-flex min-h-11 items-center font-semibold text-fg underline decoration-primary/40 underline-offset-[6px] hover:decoration-primary">
+                {t.steps}
+              </Link>
+            </div>
+            <p className="mt-6 text-sm text-muted">{t.small}</p>
+          </FadeUp>
+          <FadeUp onLoad delay={0.15}>
+            <PhotoWithCard src="/assets/sandar/circle.jpg" aspect="aspect-[16/10]" overlap="-mt-28" priority revealDelay={0.2}>
+              <Thread space={t.thread.space} members={t.thread.members} messages={t.thread.messages} labels={t.thread.labels} />
+              <p className="mt-3 text-xs text-muted">{t.thread.caption}</p>
+            </PhotoWithCard>
+          </FadeUp>
+        </Container>
+      </section>
 
-        <section className="space-y-6">
-          <Reveal className="space-y-5">
-            <span className="inline-flex rounded-full border border-border bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-              {t.eyebrow}
-            </span>
-            <h1 className="max-w-3xl font-[var(--font-display)] text-5xl leading-[0.95] tracking-tight text-fg sm:text-6xl">
-              {t.title}
-            </h1>
-            <p className="max-w-3xl text-base leading-7 text-muted sm:text-lg">
-              {t.description}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {t.heroPoints.map((point) => (
-                <span
-                  key={point}
-                  className="rounded-full border border-border bg-white/70 px-4 py-2 text-sm text-muted shadow-soft"
-                >
-                  {point}
-                </span>
+      <section className="border-t border-border py-16 sm:py-20">
+        <Container className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+          <FadeUp>
+            <h2 className="font-display text-3xl text-fg sm:text-4xl">{t.whatTitle}</h2>
+            <p className="mt-3 max-w-sm text-sm leading-6 text-muted">{t.later}</p>
+          </FadeUp>
+          <dl className="divide-y divide-border border-y border-border">
+            {t.what.map((w) => (
+              <FadeUp key={w.t} className="grid gap-1 py-5 sm:grid-cols-[1fr_1.3fr] sm:gap-8">
+                <dt className="font-display text-xl text-fg">{w.t}</dt>
+                <dd className="text-base leading-7 text-muted">{w.d}</dd>
+              </FadeUp>
+            ))}
+          </dl>
+        </Container>
+      </section>
+
+      <section id="steps" className="scroll-mt-20 bg-surface py-16 sm:py-20">
+        <Container className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+          <div>
+            <FadeUp>
+              <h2 className="font-display text-3xl text-fg sm:text-4xl">{t.howTitle}</h2>
+            </FadeUp>
+            <ol className="mt-8 space-y-6">
+              {t.how.map((s, i) => (
+                <FadeUp key={s.t}>
+                  <li className="flex gap-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">{i + 1}</span>
+                    <div>
+                      <p className="font-semibold text-fg">{s.t}</p>
+                      <p className="mt-0.5 text-muted">{s.d}</p>
+                    </div>
+                  </li>
+                </FadeUp>
               ))}
+            </ol>
+          </div>
+          <FadeUp delay={0.1}>
+            <div className="rounded-[24px] bg-card p-6 sm:p-8">
+              <h3 className="font-display text-2xl text-fg">{t.prepTitle}</h3>
+              <ul className="mt-5 space-y-3">
+                {t.prep.map((p) => (
+                  <li key={p} className="flex gap-3 text-[15px] leading-6 text-fg">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border border-primary/50 text-[11px] text-primary" aria-hidden="true">✓</span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <ButtonLink href={registerCommunityHref} className="mt-7 w-full">{t.cta}</ButtonLink>
+              <p className="mt-3 text-center text-sm text-muted">
+                {t.have}{" "}
+                <Link href={logInHref} className="font-semibold text-fg underline underline-offset-4">{t.logIn}</Link>
+              </p>
             </div>
-          </Reveal>
+          </FadeUp>
+        </Container>
+      </section>
 
-          <Reveal delay={0.08}>
-            <Card className="overflow-hidden rounded-[32px] p-3 shadow-card">
-              <div className="relative aspect-[16/9] overflow-hidden rounded-[26px] border border-border">
-                <Image
-                  src="/assets/page-heroes/partners-hero.png"
-                  alt="Partners visual"
-                  fill
-                  className="object-cover object-center"
-                  priority
-                />
-              </div>
-            </Card>
-          </Reveal>
-        </section>
-
-        <section className="mt-14">
-          <Reveal className="space-y-3">
-            <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-              {t.featureTitle}
-            </h2>
-          </Reveal>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {t.featureCards.map((card, index) => (
-              <Reveal key={card} delay={index * 0.04}>
-                <Card className="h-full rounded-[22px] p-5 shadow-soft">
-                  <p className="text-sm leading-6 text-muted">{card}</p>
-                </Card>
-              </Reveal>
+      <section className="py-16 sm:py-20">
+        <Container className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+          <FadeUp>
+            <h2 className="font-display text-3xl text-fg sm:text-4xl">{t.faqTitle}</h2>
+          </FadeUp>
+          <div className="border-t border-fg/15">
+            {t.faq.map((item) => (
+              <details key={item.q} className="group border-b border-fg/15">
+                <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 py-5 text-lg text-fg [&::-webkit-details-marker]:hidden">
+                  {item.q}
+                  <span className="text-2xl text-primary transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+                </summary>
+                <p className="max-w-xl pb-6 text-base leading-7 text-muted">{item.a}</p>
+              </details>
             ))}
           </div>
-        </section>
-
-        <section className="mt-14 grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <Reveal className="space-y-3">
-            <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-              {t.systemsTitle}
-            </h2>
-          </Reveal>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {t.systemsCards.map((card, index) => (
-              <Reveal key={card} delay={index * 0.04}>
-                <Card className="rounded-[22px] p-5 shadow-soft">
-                  <p className="text-sm leading-6 text-muted">{card}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-14">
-          <Reveal className="space-y-3">
-            <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-              {t.trustTitle}
-            </h2>
-          </Reveal>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {t.trustCards.map((card, index) => (
-              <Reveal key={card} delay={index * 0.04}>
-                <Card className="h-full rounded-[22px] p-5 shadow-soft">
-                  <div className="mb-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <p className="text-sm leading-6 text-muted">{card}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <Reveal className="mt-14">
-          <Card className="rounded-[30px] p-6 shadow-card sm:p-8">
-            <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <h2 className="font-[var(--font-display)] text-3xl text-fg sm:text-4xl">
-                  {t.finalTitle}
-                </h2>
-                <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-                  {t.finalText}
-                </p>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/sign-up">
-                  <Button>{t.finalPrimary}</Button>
-                </Link>
-                <Link href="/about">
-                  <Button variant="secondary">{t.finalSecondary}</Button>
-                </Link>
-              </div>
-            </div>
-          </Card>
-        </Reveal>
-      </Container>
+        </Container>
+      </section>
     </div>
   );
 }
