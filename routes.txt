@@ -1,0 +1,13 @@
+# Pages on hellosandar.com. Changing this list is a deliberate, reviewed change.
+/
+/404/
+/about/
+/communities/
+/for-partners/
+/guidelines/
+/how-it-works/
+/privacy/
+/safety/
+/sign-in/
+/sign-up/
+/terms/
